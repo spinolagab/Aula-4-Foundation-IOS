@@ -150,9 +150,6 @@ class BinaryTree{
         }
 
         var start = self.root
-        // guard let start = self.root else {
-        //     return nil
-        // }
 
 
         while let aux = start{
@@ -206,7 +203,6 @@ class BinaryTree{
         } else if value > root.data {
             root.right = removeNode(root: root.right, value: value)
         } else {
-            // Encontrado o nó com o valor
 
             if root.left == nil {
                 return root.right
@@ -320,23 +316,23 @@ if let root = tree.getRoot() {
         }
     }
 
-    // print("\nRemovendo o 12 que eh uma folha\n")
+    print("\nRemovendo o 12 que eh uma folha\n")
     
-    // tree.remove(value: 15)
-    // tree.inOrderTraversal(node: root)
+    tree.remove(value: 12)
+    tree.inOrderTraversal(node: root)
 
-    // print("\nRemovendo o 15 que tem 2 filhos\n")
+    print("\nRemovendo o 15 que tem 2 filhos\n")
     
-    // tree.remove(value: 15)
-    // tree.inOrderTraversal(node: root)
+    tree.remove(value: 15)
+    tree.inOrderTraversal(node: root)
 
-    // print("\nRemovendo o 10 que eh a raiz\n")
+    print("\nRemovendo o 10 que eh a raiz\n")
     
-    // tree.remove(value: 10)
-    // tree.inOrderTraversal(node: root)
+    tree.remove(value: 10)
+    tree.inOrderTraversal(node: root)
 
 
-    // print("Nova raiz: \(tree.getRoot()!.getData())")
+    print("Nova raiz: \(tree.getRoot()!.getData())")
     
     
 }

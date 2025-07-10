@@ -10,13 +10,13 @@ import Foundation
 class Square {
     
     // quadrados tem os lados de mesmo tamanho
-    var sizeOfL: Int
+    var sizeOfL: Double
     
-    init(sizeOfL: Int) {
+    init(sizeOfL: Double) {
         self.sizeOfL = sizeOfL
     }
     
-    func areaSize() -> Int{
+    func areaSize() -> Double{
         return (self.sizeOfL * self.sizeOfL)
     }
     
@@ -29,13 +29,12 @@ guard let input = readLine() else{
     exit(1)
 }
 
-guard let L = Int(input) else{
+guard let L = Double(input) else{
     print("Error: Input is not an Integer value or is a Nil value")
     exit(1)
 }
 
 let quadrado: Square = Square(sizeOfL: L)
 
-//init quadrado(Square(sizeOfL: <#T##Int#>))
 
-print(quadrado.areaSize())
+print(String(format: "Area do quadrado: %.2f", quadrado.areaSize()))
