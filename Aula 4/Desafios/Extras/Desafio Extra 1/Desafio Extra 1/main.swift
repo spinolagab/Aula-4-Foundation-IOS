@@ -42,20 +42,66 @@ class Node{
         return self.data
     }
     
+
+
+    func isLeaf() -> Bool{
+        return self.left == nil && self.right == nil
+    }
+
+
+    func getHeight() -> Int{
+
+        if(isLeaf()){
+            return 0
+        }
+
+        var alturaDireita: Int
+        var alturaEsquerda: Int
+
+        if let right = self.getRight() {
+            alturaDireita = right.getHeight() + 1
+        }
+        else {
+            alturaDireita = 0
+        }
+    
+        if let left = self.getLeft() {
+            alturaEsquerda = left.getHeight() + 1
+        }
+        else {
+            alturaEsquerda = 0
+        }
+
+        return max(alturaDireita, alturaEsquerda)
+
+    }
+
 }
 
 class BinaryTree{
+
     var root: Node?
     
     init() {
         self.root = nil
     }
     
+
     func isTreeEmpty() -> Bool{
         return self.root == nil
     }
     
+
+    func getRoot() -> Node?{
+        if let value = self.root {
+            return value
+        }
+        return nil
+    }
+
+
     func insertNode(node: Node, start: Node){
+
         if(self.isTreeEmpty()){
             self.root = node
         }
@@ -63,40 +109,234 @@ class BinaryTree{
         else{
             
             if(node.getData() >= start.getData()){
-                if(start.getRight() == nil){
-                    start.setRight(right: node)
+
+                if let right = start.getRight(){
+                    insertNode(node: node, start: right)
                 }
                 else{
-                    insertNode(node: node, start: start.getRight())
+                    start.setRight(right: node)
                 }
+
             }
+
+            else{
             
+                if let left = start.getLeft(){
+                    insertNode(node: node, start: left)
+                } 
+                else{
+                    start.setLeft(left: node)
+                }
             
+            }
             
         }
         
     }
+
+
+    func getTreeHeight() -> Int{
+        guard let root = self.root else {
+            return -1
+        }
+
+        return root.getHeight()
+    }
+
+
+    func findParent(node: Node) -> Node?{
+        if(isTreeEmpty() || self.root === node) {
+            return nil
+        }
+
+        var start = self.root
+        // guard let start = self.root else {
+        //     return nil
+        // }
+
+
+        while let aux = start{
+            if(aux.getLeft() === node || aux.getRight() === node){
+                return aux
+            }
+
+            if(node.getData() >= aux.getData()){
+                start = aux.getRight() 
+            }
+            else {
+                start = aux.getLeft()
+            }
+        }
+
+        return nil
+    }
+
+
+    func findMin(node: Node) -> Node?{
+        
+        var current = node
+
+        while let next = current.getLeft() {
+            current = next
+        }
+
+        return current
+    }
+
+
+    func findMax(node: Node) -> Node?{
+
+        var current = node
+
+        while let next = current.getRight() {
+            current = next
+        }
+
+        return current
+    }
+
+
+    func removeNode(root: Node?, value: Int) -> Node? {
+        guard let root = root else {
+            return nil
+        }
+
+        if value < root.data {
+            root.left = removeNode(root: root.left, value: value)
+        } else if value > root.data {
+            root.right = removeNode(root: root.right, value: value)
+        } else {
+            // Encontrado o nó com o valor
+
+            if root.left == nil {
+                return root.right
+            }
+
+            if root.right == nil {
+                return root.left
+            }
+
+            if let min = findMin(node: root.right!) {
+                root.data = min.data
+                root.right = removeNode(root: root.right, value: min.data)
+            }
+        }
+
+        return root
+    }
+
+    func remove(value: Int){
+        self.root = self.removeNode(root: self.root, value: value)
+    }
+
+    func inOrderTraversal(node: Node){
+
+        if let left = node.getLeft() {
+            inOrderTraversal(node: left)
+        }
+
+        print(node.getData())
+
+        if let right = node.getRight(){
+            inOrderTraversal(node: right)
+        }
+        
+    }
+
+    func preOrderTraversal(node: Node){
+
+        print(node.getData())
+
+        if let left = node.getLeft() {
+            preOrderTraversal(node: left)
+        }
+
+        if let right = node.getRight(){
+            preOrderTraversal(node: right)
+        }       
+    }
+    
+    func postOrderTraversal(node: Node){
+
+        if let left = node.getLeft() {
+            postOrderTraversal(node: left)
+        }
+
+        if let right = node.getRight(){
+            postOrderTraversal(node: right)
+        }
+
+        print(node.getData())
+
+    }
+
+}
+
+
+let tree = BinaryTree()
+let n1 = Node(data: 10)
+let n2 = Node(data: 5)
+let n3 = Node(data: 15)
+let n4 = Node(data: 6)
+let n5 = Node(data: 12)
+let n6 = Node(data: 16)
+let n7 = Node(data: 20)
+let n8 = Node(data: 7)
+let n9 = Node(data: 8)
+
+tree.insertNode(node: n1, start: n1)
+tree.insertNode(node: n2, start: n1)
+tree.insertNode(node: n3, start: n1)
+tree.insertNode(node: n4, start: n1)
+tree.insertNode(node: n5, start: n1)
+tree.insertNode(node: n6, start: n1)
+tree.insertNode(node: n8, start: n1)
+tree.insertNode(node: n9, start: n1)
+
+
+if let root = tree.getRoot() {
+    print("In Order Traversal")
+    tree.inOrderTraversal(node: root)
+    print("Pre Order Traversal")
+    tree.preOrderTraversal(node: root)
+
+    print("Post Order Traversal")
+    tree.postOrderTraversal(node: root)
+
+    print("Tree Height = \(tree.getTreeHeight())")
+
+    if let direita = root.getRight() {
+        if let minimum = tree.findMin(node: direita){
+            print("Menor da direita")
+            print(minimum.getData())
+        }
+        
+    }
+
+    if let esquerda = root.getLeft(){
+        if let maximum = tree.findMax(node: esquerda){
+            print("Maior da esquerda")
+            print(maximum.getData())
+        }
+    }
+
+    // print("\nRemovendo o 12 que eh uma folha\n")
+    
+    // tree.remove(value: 15)
+    // tree.inOrderTraversal(node: root)
+
+    // print("\nRemovendo o 15 que tem 2 filhos\n")
+    
+    // tree.remove(value: 15)
+    // tree.inOrderTraversal(node: root)
+
+    // print("\nRemovendo o 10 que eh a raiz\n")
+    
+    // tree.remove(value: 10)
+    // tree.inOrderTraversal(node: root)
+
+
+    // print("Nova raiz: \(tree.getRoot()!.getData())")
+    
     
 }
-
-
-var teste: Node = Node(data: 4)
-
-var teste2: Node = Node(data: 3)
-
-var teste3: Node = Node(data: 5)
-
-teste.setLeft(left: teste2)
-
-teste.setRight(right: teste3)
-
-print(teste.getData())
-
-if var left = teste.getLeft() {
-    print(left.getData())
-}
-
-if var right = teste.getRight() {
-    print(right.getData())
-}
-
